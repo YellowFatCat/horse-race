@@ -1,0 +1,65 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="race-service" class="com.epam.lab.service.RaceService">
+        <property name="horseService" ref="horse-service"/>
+    </bean>
+
+    <bean id="horse-service" class="com.epam.lab.service.HorseService"/>
+
+    <bean id="arabian" class="com.epam.lab.model.Breed">
+        <property name="name" value="Arabian"/>
+    </bean>
+
+    <bean id="thoroughbred" class="com.epam.lab.model.Breed">
+        <property name="name" value="Thoroughbred"/>
+    </bean>
+
+    <bean id="paint" class="com.epam.lab.model.Breed">
+        <property name="name" value="Paint"/>
+    </bean>
+
+    <bean id="student" class="com.epam.lab.model.Rider">
+        <property name="name" value="Vasya"/>
+        <property name="surname" value="Pupkin"/>
+        <property name="skill" value="0.8"/>
+    </bean>
+
+    <bean id="master" class="com.epam.lab.model.Rider">
+        <property name="name" value="Boris"/>
+        <property name="surname" value="Borisov"/>
+        <property name="skill" value="1.1"/>
+    </bean>
+
+    <bean id="witcher" class="com.epam.lab.model.Rider">
+        <property name="name" value="Geralt"/>
+        <property name="surname" value="from Rivia"/>
+        <property name="skill" value="1.3"/>
+    </bean>
+
+    <bean id="horse1" class="com.epam.lab.model.Horse">
+        <property name="name" value="Cherry"/>
+        <property name="breed" ref="arabian"/>
+        <property name="rider" ref="student"/>
+        <property name="maxSpeed" value="16"/>
+    </bean>
+
+    <bean id="horse2" class="com.epam.lab.model.Horse">
+        <property name="name" value="Waffle"/>
+        <property name="breed" ref="paint"/>
+        <property name="rider" ref="master"/>
+        <property name="maxSpeed" value="14"/>
+    </bean>
+
+    <bean id="horse3" class="com.epam.lab.model.Horse">
+        <property name="name" value="Plotwa"/>
+        <property name="breed" ref="thoroughbred"/>
+        <property name="rider" ref="witcher"/>
+        <property name="maxSpeed" value="15"/>
+    </bean>
+
+</beans>
