@@ -1,32 +1,29 @@
 package com.epam.lab.service;
 
 import com.epam.lab.model.Horse;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+
+@Setter
 public class HorseService {
 
+    private List<Horse> horses;
+
     public List<Horse> getAllHorses() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-        List<Horse> horses = new ArrayList<>();
-        for (int i = 1; i <= 3; i++) {
-            horses.add((Horse) context.getBean("horse" + i));
-        }
         return horses;
     }
 
     public List<Horse> getSomeHorses(int maxCount) {
-        List<Horse> horses = getAllHorses();
-//        return horses.stream().limit(maxCount).collect(toSet());
 
-        while (horses.size() > maxCount) {
-            horses.remove(ThreadLocalRandom.current().nextInt(horses.size()));
-        }
-
-        return horses;
+        return Stream.generate(() -> ThreadLocalRandom.current().nextInt(horses.size()))
+                .distinct()
+                .limit(maxCount)
+                .map(index -> horses.get(index))
+                .collect(toList());
     }
 }
