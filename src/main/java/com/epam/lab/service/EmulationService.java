@@ -6,6 +6,8 @@ import lombok.Getter;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -14,7 +16,9 @@ import java.util.stream.Collectors;
 
 public class EmulationService {
 
-    public void startEmulation(Race race) throws InterruptedException {
+    public Horse startEmulation(Race race) throws InterruptedException {
+
+        System.out.println("### The race begins! ###\n");
 
         RaceSnapshot raceSnapshot = new RaceSnapshot(race);
 
@@ -24,7 +28,11 @@ public class EmulationService {
             raceSnapshot = RaceSnapshot.getSnapshotForCurrentTime(raceSnapshot);
         }
 
-        System.out.println(raceSnapshot);
+        System.out.println(raceSnapshot + "\n");
+
+        System.out.println("### The race ends! ###");
+
+        return Collections.max(raceSnapshot.horsesPositions.entrySet(), Comparator.comparingDouble(Map.Entry::getValue)).getKey();
     }
 
     @Getter
