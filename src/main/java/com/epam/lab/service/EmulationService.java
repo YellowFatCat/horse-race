@@ -20,11 +20,14 @@ public class EmulationService {
     @SneakyThrows
     public Horse startEmulation(Race race) {
 
+        clearConsole();
         System.out.println("### The race begins! ###\n");
+        TimeUnit.SECONDS.sleep(1);
 
         RaceSnapshot raceSnapshot = new RaceSnapshot(race);
 
         while (raceSnapshot.isRaceInAction()) {
+            clearConsole();
             System.out.println(raceSnapshot);
             TimeUnit.SECONDS.sleep(1);
             raceSnapshot = RaceSnapshot.getSnapshotForCurrentTime(raceSnapshot);
@@ -80,5 +83,9 @@ public class EmulationService {
             return horsesPositions.entrySet().stream()
                     .noneMatch(horsePosition -> horsePosition.getValue() >= race.getDistance());
         }
+    }
+
+    public void clearConsole() {
+        System.out.print("\033[H\033[2J");
     }
 }
