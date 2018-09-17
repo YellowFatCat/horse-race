@@ -22,17 +22,12 @@ public class App {
 
     public static void main(String[] args) {
         try (ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("context.xml")) {
-            App app = new App();
-            app.run(context);
+            App app = context.getBean(App.class);
+            app.run();
         }
     }
 
-    public void run(ConfigurableApplicationContext context) {
-
-        emulationService = context.getBean(EmulationService.class);
-        raceService = context.getBean(RaceService.class);
-        horseService = context.getBean(HorseService.class);
-
+    public void run() {
 
         Race race = raceService.getRace(50);
 
