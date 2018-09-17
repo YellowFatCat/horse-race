@@ -10,7 +10,7 @@ public class App {
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
-        raceService = (RaceService) context.getBean("race-service");
+        raceService = (RaceService) context.getBean("raceService");
         System.out.println(raceService.getRace());
     }
 }
