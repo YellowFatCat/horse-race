@@ -15,7 +15,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.toIntExact;
+
 public class EmulationService {
+
+    private final int SCREEN_LENGTH = 60;
+    private final int HORSE_LENGTH = 10;
+
+    private final String horse =
+            "        ,,_\n" +
+                    " _     ~/=-\"\n" +
+                    "~ )___~//\n" +
+                    " _//---\\|_\n" +
+                    "/        /";
 
     @SneakyThrows
     public Horse startEmulation(Race race) {
@@ -27,14 +39,65 @@ public class EmulationService {
 
         while (raceSnapshot.isRaceInAction()) {
             clearConsole();
-            System.out.println(raceSnapshot + "\n");
+            printHorses(raceSnapshot);
             TimeUnit.SECONDS.sleep(1);
             raceSnapshot = RaceSnapshot.getSnapshotForCurrentTime(raceSnapshot);
         }
 
-        System.out.println(raceSnapshot + "\n");
+        clearConsole();
+        printHorses(raceSnapshot);
 
         return Collections.max(raceSnapshot.horsesPositions.entrySet(), Comparator.comparingDouble(Map.Entry::getValue)).getKey();
+    }
+
+    private void printHorses(RaceSnapshot raceSnapshot) {
+        Map<Horse, Double> horsesPositions = raceSnapshot.getHorsesPositions();
+        for (Map.Entry<Horse, Double> horsePosition : horsesPositions.entrySet()) {
+            String name = horsePosition.getKey().getName();
+
+            int gone = toIntExact(Math.round(SCREEN_LENGTH * horsePosition.getValue() / raceSnapshot.getRace().getDistance()));
+
+            int emptySpaceLength = (gone < HORSE_LENGTH) ? gone + 1 : HORSE_LENGTH + 1;
+            int distanceBehindHorseLength = (gone > HORSE_LENGTH) ? gone - HORSE_LENGTH : 0;
+            int remainingDistanceLength = SCREEN_LENGTH - gone;
+
+            StringBuilder emptySpaceForBottomLine = new StringBuilder();
+            for (int i = 0; i < emptySpaceLength; i++) {
+                emptySpaceForBottomLine.append(' ');
+            }
+
+            StringBuilder emptySpaceForTopLines = new StringBuilder();
+            for (int i = 0; i < name.length() + emptySpaceLength + distanceBehindHorseLength; i++) {
+                emptySpaceForTopLines.append(' ');
+            }
+
+            StringBuilder distanceBehindHorse = new StringBuilder();
+            for (int i = 0; i < distanceBehindHorseLength; i++) {
+                distanceBehindHorse.append('_');
+            }
+
+            StringBuilder remainingDistance = new StringBuilder();
+            for (int i = 0; i < remainingDistanceLength; i++) {
+                remainingDistance.append('_');
+            }
+
+            String[] splittedHorse = horse.split("\\n");
+            for (int i = 0; i < splittedHorse.length; i++) {
+                StringBuilder line = new StringBuilder();
+                if (i == splittedHorse.length - 1) {
+                    line.append(name)
+                            .append(emptySpaceForBottomLine)
+                            .append(distanceBehindHorse)
+                            .append(splittedHorse[i])
+                            .append(remainingDistance);
+                } else {
+                    line.append(emptySpaceForTopLines)
+                            .append(splittedHorse[i]);
+                }
+                System.out.println(line);
+            }
+            System.out.println();
+        }
     }
 
     @Getter
@@ -81,7 +144,7 @@ public class EmulationService {
         }
     }
 
-    public void clearConsole() {
+    private void clearConsole() {
         System.out.print("\033[H\033[2J");
     }
 }
