@@ -4,6 +4,7 @@ import com.epam.lab.model.Horse;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
@@ -14,10 +15,6 @@ public class HorseService {
 
     private List<Horse> horses;
 
-    public List<Horse> getAllHorses() {
-        return horses;
-    }
-
     public List<Horse> getSomeHorses(int maxCount) {
 
         return Stream.generate(() -> ThreadLocalRandom.current().nextInt(horses.size()))
@@ -25,5 +22,9 @@ public class HorseService {
                 .limit(maxCount)
                 .map(index -> horses.get(index))
                 .collect(toList());
+    }
+
+    public Optional<Horse> getHorseByName(String name) {
+        return horses.stream().filter(horse -> name.equalsIgnoreCase(horse.getName())).findFirst();
     }
 }

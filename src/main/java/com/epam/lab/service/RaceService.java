@@ -10,10 +10,10 @@ public class RaceService {
 
     private HorseService horseService;
 
-    public Race getRace() {
+    public Race getRace(int distance) {
         return new Race(
                 horseService.getSomeHorses(2),
-                ThreadLocalRandom.current().nextInt(2500, 4000)
+                distance
         );
     }
 }
