@@ -24,7 +24,7 @@ public class HorseService {
                 .collect(toList());
     }
 
-    public Optional<Horse> getHorseByName(String name) {
-        return horses.stream().filter(horse -> name.equalsIgnoreCase(horse.getName())).findFirst();
+    public Optional<Horse> getHorseByName(List<Horse> participants, String name) {
+        return participants.stream().filter(horse -> name.equalsIgnoreCase(horse.getName())).findFirst();
     }
 }
