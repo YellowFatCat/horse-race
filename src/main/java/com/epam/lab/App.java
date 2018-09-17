@@ -20,6 +20,15 @@ public class App {
     private RaceService raceService;
     private HorseService horseService;
 
+    private String face =
+            "       /\\/\\\n" +
+            "      /    \\\n" +
+            "    ~/(^  ^)\n" +
+            "   ~/  )  (\n" +
+            "  ~/   (  )\n" +
+            " ~/     ~~\n" +
+            "~/       | " ;
+
     public static void main(String[] args) {
         try (ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("context.xml")) {
             App app = context.getBean(App.class);
@@ -31,21 +40,21 @@ public class App {
 
         Race race = raceService.getRace(50);
 
+        // Make a bet
+        printAllHorses(race.getHorses());
         Horse bet = makeABet(race.getHorses());
         System.out.println("\nYour pick: " + bet.getName() + "\n");
 
+        // Start and finish race
         Horse winner = emulationService.startEmulation(race);
 
-        System.out.println("\nWinner: " + winner.getName());
+        // Show a winner
+        System.out.println("Winner: " + winner.getName());
         System.out.println((winner == bet) ? "You won!" : "Sorry, you lose");
 
     }
 
     public Horse makeABet(List<Horse> horses) {
-        System.out.println("Race participants: ");
-        for (Horse horse : horses) {
-            System.out.println(horse);
-        }
 
         Scanner scanner = new Scanner(System.in);
 
@@ -53,12 +62,20 @@ public class App {
         do {
             System.out.print("\nChoose a horse by name: ");
             String searchQuery = scanner.next();
-            bet = horseService.getHorseByName(searchQuery);
+            bet = horseService.getHorseByName(horses, searchQuery);
             if (!bet.isPresent()) {
                 System.out.println("There is no horse with name " + searchQuery + " in current race. Try again.");
             }
         } while (!bet.isPresent());
 
         return bet.get();
+    }
+
+    private void printAllHorses(List<Horse> horses) {
+        System.out.println("Race participants: ");
+        for (Horse horse : horses) {
+            System.out.print("\n" + face);
+            System.out.println(horse);
+        }
     }
 }

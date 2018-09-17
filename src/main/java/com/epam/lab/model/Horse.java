@@ -14,6 +14,6 @@ public class Horse {
 
     @Override
     public String toString() {
-        return name + ":\n breed: " + breed + ",\n rider: " + rider + ",\n maxSpeed: " + maxSpeed + " m/s";
+        return name + "\n breed: " + breed + ",\n rider: " + rider + ",\n maxSpeed: " + maxSpeed + " m/s";
     }
 }

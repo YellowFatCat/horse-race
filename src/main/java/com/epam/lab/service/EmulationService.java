@@ -21,21 +21,18 @@ public class EmulationService {
     public Horse startEmulation(Race race) {
 
         clearConsole();
-        System.out.println("### The race begins! ###\n");
         TimeUnit.SECONDS.sleep(1);
 
         RaceSnapshot raceSnapshot = new RaceSnapshot(race);
 
         while (raceSnapshot.isRaceInAction()) {
             clearConsole();
-            System.out.println(raceSnapshot);
+            System.out.println(raceSnapshot + "\n");
             TimeUnit.SECONDS.sleep(1);
             raceSnapshot = RaceSnapshot.getSnapshotForCurrentTime(raceSnapshot);
         }
 
         System.out.println(raceSnapshot + "\n");
-
-        System.out.println("### The race ends! ###");
 
         return Collections.max(raceSnapshot.horsesPositions.entrySet(), Comparator.comparingDouble(Map.Entry::getValue)).getKey();
     }
@@ -75,8 +72,7 @@ public class EmulationService {
             return "Time: " + timestamp + "\n" +
                     horsesPositions.entrySet().stream()
                             .map(horsePosition -> horsePosition.getKey().getName() + ": " + formatter.format(horsePosition.getValue()) + " m")
-                            .collect(Collectors.joining("\n"))
-                    + "\n";
+                            .collect(Collectors.joining("\n"));
         }
 
         private boolean isRaceInAction() {
