@@ -3,6 +3,7 @@ package com.epam.lab.service;
 import com.epam.lab.model.Horse;
 import com.epam.lab.model.Race;
 import lombok.Getter;
+import lombok.SneakyThrows;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -16,13 +17,14 @@ import java.util.stream.Collectors;
 
 public class EmulationService {
 
-    public Horse startEmulation(Race race) throws InterruptedException {
+    @SneakyThrows
+    public Horse startEmulation(Race race) {
 
         System.out.println("### The race begins! ###\n");
 
         RaceSnapshot raceSnapshot = new RaceSnapshot(race);
 
-        while (isRaceInAction(raceSnapshot)) {
+        while (raceSnapshot.isRaceInAction()) {
             System.out.println(raceSnapshot);
             TimeUnit.SECONDS.sleep(1);
             raceSnapshot = RaceSnapshot.getSnapshotForCurrentTime(raceSnapshot);
@@ -73,10 +75,10 @@ public class EmulationService {
                             .collect(Collectors.joining("\n"))
                     + "\n";
         }
-    }
 
-    private boolean isRaceInAction(RaceSnapshot raceSnapshot) {
-        return raceSnapshot.getHorsesPositions().entrySet().stream()
-                .noneMatch(horsePosition -> horsePosition.getValue() >= raceSnapshot.getRace().getDistance());
+        private boolean isRaceInAction() {
+            return horsesPositions.entrySet().stream()
+                    .noneMatch(horsePosition -> horsePosition.getValue() >= race.getDistance());
+        }
     }
 }

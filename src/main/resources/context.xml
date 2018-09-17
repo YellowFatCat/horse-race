@@ -5,6 +5,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+    <bean id="mainBean" class="com.epam.lab.App">
+        <property name="horseService" ref="horseService"/>
+        <property name="raceService" ref="raceService"/>
+        <property name="emulationService" ref="emulationService"/>
+    </bean>
+
     <bean id="emulationService" class="com.epam.lab.service.EmulationService"/>
 
     <bean id="raceService" class="com.epam.lab.service.RaceService">
@@ -71,5 +77,4 @@
         <property name="rider" ref="witcher"/>
         <property name="maxSpeed" value="15"/>
     </bean>
-
 </beans>

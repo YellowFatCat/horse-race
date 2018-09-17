@@ -5,26 +5,34 @@ import com.epam.lab.model.Race;
 import com.epam.lab.service.EmulationService;
 import com.epam.lab.service.HorseService;
 import com.epam.lab.service.RaceService;
-import org.springframework.context.ApplicationContext;
+import lombok.Setter;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+@Setter
 public class App {
 
-    private static EmulationService emulationService;
-    private static RaceService raceService;
-    private static HorseService horseService;
+    private EmulationService emulationService;
+    private RaceService raceService;
+    private HorseService horseService;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+        try (ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("context.xml")) {
+            App app = new App();
+            app.run(context);
+        }
+    }
 
-        ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
+    public void run(ConfigurableApplicationContext context) {
 
-        emulationService = (EmulationService) context.getBean("emulationService");
-        raceService = (RaceService) context.getBean("raceService");
-        horseService = (HorseService) context.getBean("horseService");
+        emulationService = context.getBean(EmulationService.class);
+        raceService = context.getBean(RaceService.class);
+        horseService = context.getBean(HorseService.class);
+
 
         Race race = raceService.getRace(50);
 
@@ -32,21 +40,23 @@ public class App {
         System.out.println("\nYour pick: " + bet.getName() + "\n");
 
         Horse winner = emulationService.startEmulation(race);
-        System.out.println("\nWinner: " + winner.getName());
 
+        System.out.println("\nWinner: " + winner.getName());
         System.out.println((winner == bet) ? "You won!" : "Sorry, you lose");
+
     }
 
-    public static Horse makeABet(List<Horse> horses) {
+    public Horse makeABet(List<Horse> horses) {
         System.out.println("Race participants: ");
         for (Horse horse : horses) {
             System.out.println(horse);
         }
 
+        Scanner scanner = new Scanner(System.in);
+
         Optional<Horse> bet;
         do {
             System.out.print("\nChoose a horse by name: ");
-            Scanner scanner = new Scanner(System.in);
             String searchQuery = scanner.next();
             bet = horseService.getHorseByName(searchQuery);
             if (!bet.isPresent()) {
